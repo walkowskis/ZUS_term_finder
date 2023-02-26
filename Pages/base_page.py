@@ -18,7 +18,7 @@ class BasePage:
         self.wait_element(locator)
         self.click_element(locator)
 
-    def send_keys_to_element(self, locator, text=None, key=None):
+    def send_to_element(self, locator, text=None, key=None):
         element = WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located(locator))
         if text is not None and key is not None:
             element.send_keys(text, key)
