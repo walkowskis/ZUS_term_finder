@@ -10,11 +10,13 @@ import appointments
 
 
 class AppointmentScheduler(BasePage):
-    def __init__(self):
-        self.webdriver_service = Service('C:\chromedriver\chromedriver.exe')
+
+    def __init__(self, headless=True):
+        self.webdriver_service = Service(Data.driver_path)
         self.options = Options()
         self.options.add_argument('--window-size=1920,1080')
-        self.options.add_argument('headless')
+        if headless:
+            self.options.add_argument('headless')
         self.driver = webdriver.Chrome(service=self.webdriver_service, options=self.options)
         self.driver.implicitly_wait(15)
 
