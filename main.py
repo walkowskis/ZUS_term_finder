@@ -1,12 +1,10 @@
-import time
 from selenium import webdriver
-from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from Pages.base_page import BasePage
-from Resources.locators import Pz, Menu, Appointment
 from Resources.data import Data
-import appointments
+from Pages.pz import LoginPage
+from Pages.zus import BookingPage
 
 
 class AppointmentScheduler(BasePage):
@@ -22,37 +20,12 @@ class AppointmentScheduler(BasePage):
 
     def schedule_availability(self):
         self.open(Data.url)
-        pz_main = BasePage(self.driver)
-        pz_main.click_element(Pz.BUTTON)
-        pz_main.send_to_element(Pz.LOGIN, text=Data.login)
-        pz_main.send_to_element(Pz.PASSWORD, text=Data.password, key=Keys.ENTER)
 
-        zus = BasePage(self.driver)
-        zus.wait_and_click(Menu.SCROLL_DOWN)
-        zus.wait_and_click(Menu.BOOKING_MAIN)
-        zus.click_element(Menu.SCROLL_DOWN)
-        zus.click_element(Menu.BOOKING)
-        time.sleep(5)
-        zus.send_to_element(Appointment.LOCATION, key=Keys.ARROW_DOWN)
-        time.sleep(5)
-        zus.send_to_element(Appointment.LOCATION, key=Keys.ENTER)
-        zus.click_element(Appointment.TYPE_OF_VISIT_MAIN)
-        zus.click_element(Appointment.TYPE_OF_VISIT)
-        zus.click_element(Appointment.NEXT_BUTTON)
-        zus.wait_element(Appointment.AGENDA)
-        zus.click_element(Appointment.NEXT_DATE_BUTTON)
-        zus.wait_element(Appointment.AGENDA)
-        zus.click_element(Appointment.NEXT_DATE_BUTTON)
-        zus.wait_element(Appointment.AGENDA)
-        zus.click_element(Appointment.NEXT_DATE_BUTTON)
-        time.sleep(5)
-        html = zus.get_html()
-        self.driver.quit()
+        login_page = LoginPage(self.driver)
+        login_page.login()
 
-        parser = appointments.AppointmentParser(html)
-        parser.parse()
-        dates = [d.strftime("%Y-%m-%d %H:%M") for d in parser.appointments]
-        print(dates)
+        booking_page = BookingPage(self.driver)
+        booking_page.make_reservation()
 
 
 if __name__ == '__main__':
