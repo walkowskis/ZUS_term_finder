@@ -11,8 +11,8 @@ class BasePage:
     def open(self, url):
         self.driver.get(url)
 
-    def click_element(self, locator):
-        WebDriverWait(self.driver, 10).until(ec.element_to_be_clickable(locator)).click()
+    def click_element(self, locator,  timeout=10):
+        WebDriverWait(self.driver, timeout).until(ec.element_to_be_clickable(locator)).click()
 
     def wait_and_click(self, locator):
         self.wait_element(locator)
@@ -27,11 +27,11 @@ class BasePage:
         elif key is not None:
             element.send_keys(key)
 
-    def wait_element(self, locator):
+    def wait_element(self, locator, timeout=10):
         try:
-            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located(locator))
+            WebDriverWait(self.driver, timeout).until(ec.presence_of_element_located(locator))
         except TimeoutException:
-            print("Fail")
+            print(f"Nie znaleziono elementu: {locator}")
             self.driver.quit()
 
     def get_html(self):
